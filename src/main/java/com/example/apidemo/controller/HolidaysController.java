@@ -34,7 +34,7 @@ public class HolidaysController {
         return holidayService.getHolidaysV2(country);
     }
 
-    @GetMapping("/v2/{country}/{year}") // comentario para ver difference
+    @GetMapping("/v2/{country}/{year}")
     public YearHoliday holidaysV2(@PathVariable String country, @PathVariable Integer year) {
         System.out.println(
                 "Recibio request V2!!!"
