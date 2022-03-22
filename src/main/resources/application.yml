@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    hibernate:
+      ddl-auto: update
+      jdbc:
+        batch_size: 1000
+    show-sql: false
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/holidays?zeroDateTimeBehavior=convertToNull&useSSL=false
+    username: root
+    password: Password@1234

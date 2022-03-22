@@ -4,12 +4,12 @@ import com.example.apidemo.model.holiday.Holiday;
 import com.example.apidemo.model.holiday.YearHoliday;
 import com.example.apidemo.service.HolidayService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.text.ParseException;
 
 @RestController
 @RequestMapping("holidays")
@@ -27,7 +27,7 @@ public class HolidaysController {
     }
 
     @GetMapping("/v2/{country}")
-    public Holiday holidaysV2(@PathVariable String country) {
+    public Holiday holidaysV2(@PathVariable String country) throws ParseException {
         System.out.println(
                 "Recibio request V2!!!"
         );
@@ -35,7 +35,7 @@ public class HolidaysController {
     }
 
     @GetMapping("/v2/{country}/{year}")
-    public YearHoliday holidaysV2(@PathVariable String country, @PathVariable Integer year) {
+    public YearHoliday holidaysV2(@PathVariable String country, @PathVariable Integer year) throws ParseException {
         System.out.println(
                 "Recibio request V2!!!"
         );
