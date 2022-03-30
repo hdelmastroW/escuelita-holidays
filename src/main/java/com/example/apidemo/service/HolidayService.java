@@ -2,8 +2,11 @@ package com.example.apidemo.service;
 
 import com.example.apidemo.model.holiday.Holiday;
 import com.example.apidemo.model.holiday.YearHoliday;
+import com.example.apidemo.persistence.entity.Cliente;
 import com.example.apidemo.persistence.entity.HolidayDescription;
+import com.example.apidemo.persistence.entity.Mascota;
 import com.example.apidemo.persistence.repository.HolidayDescriptionRepository;
+import com.example.apidemo.persistence.repository.MascotaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -16,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -28,6 +32,9 @@ public class HolidayService {
 
     @Autowired
     private HolidayDescriptionRepository holidayDescriptionRepository;
+
+    @Autowired
+    private MascotaRepository mascotaRepository;
 
     public String getHolidays(String country) {
         HttpHeaders headers = new HttpHeaders();
@@ -50,11 +57,35 @@ public class HolidayService {
 
         ResponseEntity<Holiday> response = restTemplate.exchange("https://weholidays.s3.amazonaws.com/" + country + ".json", HttpMethod.GET, new HttpEntity<Object>(headers), Holiday.class);
 
-        HolidayDescription holidayDescription = new HolidayDescription();
-        holidayDescription.setDescription(response.getBody().getYearHolidays().get(1).getHolidays().get(2).getDescription());
-        String dateStr = response.getBody().getYearHolidays().get(1).getHolidays().get(2).getDate();
-        holidayDescription.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(dateStr) );
-        holidayDescriptionRepository.save(holidayDescription);
+
+        Optional<HolidayDescription> holidayOpt = holidayDescriptionRepository.findByDescription("Carnaval");
+
+        if (!holidayOpt.isPresent()) {
+            HolidayDescription holidayDescription = new HolidayDescription();
+            holidayDescription.setDescription(response.getBody().getYearHolidays().get(1).getHolidays().get(2).getDescription());
+            String dateStr = response.getBody().getYearHolidays().get(1).getHolidays().get(2).getDate();
+            holidayDescription.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(dateStr));
+            holidayDescriptionRepository.save(holidayDescription);
+        }
+
+
+
+/*
+
+        Optional<Mascota> miMascotaOpt = mascotaRepository.findByNombre("boby");
+
+        if (!miMascotaOpt.isPresent()){
+            Mascota entity = new Mascota();
+            entity.setNombre("boby");
+            entity.setVacunado(Boolean.TRUE);
+            mascotaRepository.save(entity);
+        }
+
+        Mascota mascota = miMascotaOpt.get();
+
+        Cliente propietario = mascota.getPropietario();
+*/
+
         return response.getBody();
     }
 
